@@ -2,7 +2,7 @@ use ethers::types::H160;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Serialize)]
 pub struct Trade {
     pub coin: String,
     pub side: String,
