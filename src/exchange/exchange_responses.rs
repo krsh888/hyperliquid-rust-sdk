@@ -1,5 +1,7 @@
 use serde::Deserialize;
 
+use crate::exchange::exchange_client::ExchangePayload;
+
 #[derive(Deserialize, Debug, Clone)]
 pub struct RestingOrder {
     pub oid: u64,
@@ -40,6 +42,6 @@ pub struct ExchangeResponse {
 #[serde(rename_all = "camelCase")]
 #[serde(tag = "status", content = "response")]
 pub enum ExchangeResponseStatus {
-    Ok(ExchangeResponse),
+    Ok(ExchangePayload),
     Err(String),
 }

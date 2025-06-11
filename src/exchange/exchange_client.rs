@@ -41,9 +41,9 @@ pub struct ExchangeClient {
     pub coin_to_asset: HashMap<String, u32>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
-struct ExchangePayload {
+pub struct ExchangePayload {
     action: serde_json::Value,
     signature: Signature,
     nonce: u64,
@@ -131,22 +131,26 @@ impl ExchangeClient {
         signature: Signature,
         nonce: u64,
     ) -> Result<ExchangeResponseStatus> {
+        // println!("Post v3");
         let exchange_payload = ExchangePayload {
             action,
             signature,
             nonce,
             vault_address: self.vault_address,
         };
-        let res = serde_json::to_string(&exchange_payload)
-            .map_err(|e| Error::JsonParse(e.to_string()))?;
-        debug!("Sending request {res:?}");
 
-        let output = &self
-            .http_client
-            .post("/exchange", res)
-            .await
-            .map_err(|e| Error::JsonParse(e.to_string()))?;
-        serde_json::from_str(output).map_err(|e| Error::JsonParse(e.to_string()))
+        Ok(ExchangeResponseStatus::Ok(exchange_payload))
+        // let res = serde_json::to_string(&exchange_payload)
+        //     .map_err(|e| Error::JsonParse(e.to_string()))?;
+        // debug!("Sending request {res:?}");
+
+        // let output = &self
+        //     .http_client
+        //     .post("/exchange", res)
+        //     .await
+        //     .map_err(|e| Error::JsonParse(e.to_string()))?;
+
+        // serde_json::from_str(output).map_err(|e| Error::JsonParse(e.to_string()))
     }
 
     pub async fn usdc_transfer(
@@ -231,11 +235,19 @@ impl ExchangeClient {
     pub async fn market_open(
         &self,
         params: MarketOrderParams<'_>,
+        px: f64,
+        sz_decimals: u32,
     ) -> Result<ExchangeResponseStatus> {
         let slippage = params.slippage.unwrap_or(0.05); // Default 5% slippage
-        let (px, sz_decimals) = self
-            .calculate_slippage_price(params.asset, params.is_buy, slippage, params.px)
-            .await?;
+        // let (px, sz_decimals) = self
+        //     .calculate_slippage_price(params.asset, params.is_buy, slippage, params.px)
+        //     .await?;
+        // println!("Pre Px: {:?}, Sz Decimals: {:?}", px, sz_decimals);
+
+        // let px: f64 = 112000.0;
+        // let sz_decimals = 5;
+
+        // println!("Post Px: {:?}, Sz Decimals: {:?}", px, sz_decimals);
 
         let order = ClientOrderRequest {
             asset: params.asset.to_string(),
