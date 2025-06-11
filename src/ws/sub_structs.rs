@@ -13,14 +13,14 @@ pub struct Trade {
     pub tid: u64,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Serialize)]
 pub struct BookLevel {
     pub px: String,
     pub sz: String,
     pub n: u64,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Clone, Debug, Serialize)]
 pub struct L2BookData {
     pub coin: String,
     pub time: u64,
